@@ -20,7 +20,7 @@ export interface Product {
 // Productos de ejemplo. Reemplaza esto con tu primer lote real.
 const sampleProducts: Product[] = [
   {
-    slug: "caminadora-t500",
+    slug: "caminadora-t",
     name: "Caminadora T500",
     category: "Caminadoras",
     price: 2890000,
