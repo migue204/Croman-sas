@@ -1,66 +1,69 @@
 // Estructura de datos de productos.
 //
-// Por ahora los productos viven en este archivo como ejemplo.
-// Cuando conectemos Supabase, esta misma forma de datos (Product)
-// va a venir de una tabla "products" en la base de datos, y esta
-// función getProducts() se va a reemplazar por una consulta real.
-// El resto del sitio (page.tsx, ProductCard, etc.) no tiene que cambiar.
+// Los productos vienen de Supabase (tabla "products"), no de un
+// archivo fijo. El resto del sitio (page.tsx, ProductCard, etc.) no
+// tiene que cambiar, porque sigue usando Product, getProducts() y
+// getProductBySlug() con la misma forma de siempre.
+
+import { supabase } from "./supabase";
 
 export interface Product {
-  slug: string; // identificador único para la URL, ej: "caminadora-t500"
+  slug: string;
   name: string;
-  category: string; // ej: "Caminadoras", "Bicicletas", "Fuerza", "Accesorios"
-  price: number; // precio de venta en COP, ya con el margen del distribuidor
-  compareAtPrice?: number; // precio "antes de descuento", opcional
+  category: string;
+  price: number;
+  compareAtPrice?: number;
   description: string;
   imageUrl: string;
   inStock: boolean;
 }
 
-// Productos de ejemplo. Reemplaza esto con tu primer lote real.
-const sampleProducts: Product[] = [
-  {
-    slug: "caminadora-t",
-    name: "Caminadora T500",
-    category: "Caminadoras",
-    price: 2890000,
-    compareAtPrice: 3290000,
-    description:
-      "Caminadora eléctrica para uso en el hogar, motor de 2.5 HP y superficie de trote amplia.",
-    imageUrl: "/images/placeholder.svg",
-    inStock: true,
-  },
-  {
-    slug: "bicicleta-spinning-sf200",
-    name: "Bicicleta de Spinning SF200",
-    category: "Bicicletas",
-    price: 1450000,
-    description:
-      "Bicicleta de spinning con resistencia magnética y volante de inercia de 18 kg.",
-    imageUrl: "/images/placeholder.svg",
-    inStock: true,
-  },
-  {
-    slug: "banco-multiposicion-sub3001",
-    name: "Banco Multiposición SUB3001A",
-    category: "Fuerza",
-    price: 690000,
-    description:
-      "Banco ajustable para entrenamiento de fuerza en casa, estructura reforzada.",
-    imageUrl: "/images/placeholder.svg",
-    inStock: true,
-  },
-];
+// La tabla en Supabase usa snake_case (price, compare_at_price, image_url,
+// in_stock), esta función traduce esos nombres a la forma que usa el sitio.
+function mapRowToProduct(row: any): Product {
+  return {
+    slug: row.slug,
+    name: row.name,
+    category: row.category,
+    price: row.price,
+    compareAtPrice: row.compare_at_price ?? undefined,
+    description: row.description ?? "",
+    imageUrl:
+      row.image_url && row.image_url.trim() !== ""
+        ? row.image_url
+        : "/images/placeholder.svg",
+    inStock: row.in_stock,
+  };
+}
 
 export async function getProducts(): Promise<Product[]> {
-  return sampleProducts;
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error cargando productos desde Supabase:", error.message);
+    return [];
+  }
+
+  return (data ?? []).map(mapRowToProduct);
 }
 
 export async function getProductBySlug(
   slug: string
 ): Promise<Product | undefined> {
-  const products = await getProducts();
-  return products.find((p) => p.slug === slug);
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    return undefined;
+  }
+
+  return mapRowToProduct(data);
 }
 
 export function formatCOP(amount: number): string {
