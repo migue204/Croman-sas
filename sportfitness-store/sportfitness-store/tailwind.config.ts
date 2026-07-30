@@ -8,11 +8,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        graphite: "#1C1D21",
-        steel: "#2C2E35",
-        chalk: "#F3F2EF",
-        volt: "#D6FF3F",
-        rust: "#C4441F",
+        croman: {
+          red: "#D71E1F",
+          dark: "#3A3A3A",
+          white: "#FFFFFF",
+          gray: "#5E5E5E",
+          lightgray: "#A09292",
+        },
       },
       fontFamily: {
         display: ["var(--font-barlow)", "sans-serif"],

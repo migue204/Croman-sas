@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-  <rect width="400" height="400" fill="#2C2E35" opacity="0.06"/>
-  <circle cx="200" cy="160" r="60" fill="none" stroke="#1C1D21" stroke-width="8" opacity="0.15"/>
-  <rect x="140" y="240" width="120" height="16" rx="8" fill="#1C1D21" opacity="0.15"/>
-  <text x="200" y="330" font-family="sans-serif" font-size="16" fill="#1C1D21" opacity="0.35" text-anchor="middle">Foto pendiente</text>
-</svg>

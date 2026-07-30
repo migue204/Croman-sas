@@ -7,10 +7,9 @@ html {
 }
 
 body {
-  background-color: #f3f2ef;
+  background-color: #FFFFFF;
 }
 
-/* Motivo de "disco de pesas" usado como acento visual repetido en el sitio */
 .plate-notch {
   clip-path: polygon(
     0% 15%,

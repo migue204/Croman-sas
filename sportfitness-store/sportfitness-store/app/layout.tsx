@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${barlow.variable} ${inter.variable} font-body text-graphite`}>
+      <body className={`${barlow.variable} ${inter.variable} font-body text-croman-dark`}>
         <Header />
         <main>{children}</main>
         <Footer />

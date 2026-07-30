@@ -1,6 +1,6 @@
 // Estructura de datos de productos.
 //
-// Los productos ahora vienen de Supabase (tabla "products"), no de un
+// Los productos vienen de Supabase (tabla "products"), no de un
 // archivo fijo. El resto del sitio (page.tsx, ProductCard, etc.) no
 // tiene que cambiar, porque sigue usando Product, getProducts() y
 // getProductBySlug() con la misma forma de siempre.
@@ -8,11 +8,11 @@
 import { supabase } from "./supabase";
 
 export interface Product {
-  slug: string; // identificador único para la URL, ej: "caminadora-t500"
+  slug: string;
   name: string;
-  category: string; // ej: "Caminadoras", "Bicicletas", "Fuerza", "Accesorios"
-  price: number; // precio de venta en COP, ya con el margen del distribuidor
-  compareAtPrice?: number; // precio "antes de descuento", opcional
+  category: string;
+  price: number;
+  compareAtPrice?: number;
   description: string;
   imageUrl: string;
   inStock: boolean;
@@ -28,7 +28,10 @@ function mapRowToProduct(row: any): Product {
     price: row.price,
     compareAtPrice: row.compare_at_price ?? undefined,
     description: row.description ?? "",
-    imageUrl: row.image_url ?? "/images/placeholder.svg",
+    imageUrl:
+      row.image_url && row.image_url.trim() !== ""
+        ? row.image_url
+        : "/images/placeholder.svg",
     inStock: row.in_stock,
   };
 }
